@@ -4,17 +4,17 @@ notations = {
     'note_id': Path(
         default=None,
         description="`id` parameter for targeting note.",
-        gt=-1,
+        gt=0,
     ),
     'limit': Query(
         None,
         description="SQL query `limit` param.",
-        gt=-1,
+        gt=0,
     ),
     'offset': Query(
         None,
         description="SQL query `offset` param.",
-        gt=-1,
+        gt=0,
     ),
     'username': Path(
         default=None,
