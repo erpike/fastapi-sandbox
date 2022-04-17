@@ -27,11 +27,12 @@ class BaseModel(Model):
 
 
 class User(BaseModel):
-    username = CharField(max_length=255, unique=True)
+    username = CharField(max_length=255, unique=True, null=False)
+    password = CharField(max_length=255, null=False)
 
 
 class Note(BaseModel):
-    text = TextField()
+    text = TextField(null=False)
     user = ForeignKeyField(User)
 
 
