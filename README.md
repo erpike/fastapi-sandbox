@@ -9,7 +9,7 @@
       - shows log
 
 2. python run: (port=8000)
-   - `guvicorn src.main:app`
+   - `guvicorn main:app`
      - flag: `--reload` (restart server on code update)
 
 - available addresses:
