@@ -19,5 +19,11 @@ notations = {
     'username': Path(
         default=None,
         description="Unique `username` parameter for new user.",
-    )
+        max_length=255,
+    ),
+    'user_id': Query(
+        None,
+        description="Select all notes by selected `user_id` (optional) param.",
+        gt=0,
+    ),
 }
