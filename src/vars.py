@@ -16,4 +16,8 @@ notations = {
         description="SQL query `offset` param.",
         gt=-1,
     ),
+    'username': Path(
+        default=None,
+        description="Unique `username` parameter for new user.",
+    )
 }
