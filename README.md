@@ -1,6 +1,6 @@
 ### FastApi Sandbox project by Erpike
 
-##### quickstart:
+#### Quickstart:
 
 1. bash run: (port=80)
    - `run.sh`
@@ -13,5 +13,16 @@
      - flag: `--reload` (restart server on code update)
 
 - available addresses:
-  - http://127.0.0.1:port/docs
-  - http://127.0.0.1:port/redoc
+  - http://127.0.0.1:{port}/docs (swagger)
+  - http://127.0.0.1:{port}/redoc (ReDoc)
+
+
+##### Little theory:
+
+key `FastAPI` features:
+- automatic documentation
+  - `swagger`
+  - `ReDoc`
+- security and authentication
+- dependency injection
+- testing
