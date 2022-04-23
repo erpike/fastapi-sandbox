@@ -9,6 +9,9 @@ sys.path.append(SRC_DIR)
 DB_FILENAME = os.path.join(ROOT_DIR, "demo.db")
 MIGRATIONS_DIR = os.path.join(SRC_DIR, "migrations")
 
+ACCESS_TOKEN_EXPIRE_MINUTES = 20
+ENCODE_ALGORITHM = "HS256"
+
 
 def set_config_variable(name, default=None):
     return os.environ.get(name) or default

@@ -5,9 +5,9 @@ from fastapi import APIRouter, Header, Response, Depends
 from playhouse.shortcuts import model_to_dict
 from starlette import status
 
-from src.auth.oauth2 import oauth2_schema
+from src.auth.oauth2 import oauth2_schema, identify_user
 from src.exceptions import BadRequestException
-from src.models import Note
+from src.models import Note, User
 from src.type_models import (
     NoteCreate as TypeNoteCreate,
     NoteUpdate as TypeNoteUpdate,
@@ -30,7 +30,7 @@ async def get_note(
     note_id: int = notations["note_id"],
     query_note_id=notations["q_note_id"],
     custom_header: Optional[List[str]] = Header(None),
-    token: str = Depends(oauth2_schema),
+    user: User = Depends(identify_user),
 ):
     # No validation required as FastAPI already done this job :)
     # if not note_id or type(note_id) is not int:
@@ -59,6 +59,7 @@ async def list_note(
     limit: Optional[int] = notations["limit"],
     offset: Optional[int] = notations["offset"],
     user_id: Optional[int] = notations["q_user_id"],
+    user: User = Depends(identify_user),
 ):
     """
     :return: all notes related to user (by id).\n
@@ -74,7 +75,10 @@ async def list_note(
 
 @router.post("/")
 @open_connection
-async def create_note(item: TypeNoteCreate):
+async def create_note(
+    item: TypeNoteCreate,
+    user: User = Depends(identify_user),
+):
     result = Note.create(
         text=item.text,
         user=item.user_id or None,
@@ -84,7 +88,12 @@ async def create_note(item: TypeNoteCreate):
 
 @router.put("/{note_id}")
 @open_connection
-async def update_note(*, note_id: int = notations["note_id"], item: TypeNoteUpdate):
+async def update_note(
+    *,
+    note_id: int = notations["note_id"],
+    item: TypeNoteUpdate,
+    user: User = Depends(identify_user),
+):
     if not item.text and not item.user_id:
         raise BadRequestException("Either `text` or `user_id` parameter is empty.")
 
@@ -99,6 +108,9 @@ async def update_note(*, note_id: int = notations["note_id"], item: TypeNoteUpda
 
 @router.delete("/{note_id}")
 @open_connection
-async def delete_note(note_id: int = notations["note_id"]):
+async def delete_note(
+    note_id: int = notations["note_id"],
+    user: User = Depends(identify_user),
+):
     result = Note.delete().where(Note.id == note_id).execute()
     return Response(content=json.dumps({"deleted": result}), media_type="application/json")
