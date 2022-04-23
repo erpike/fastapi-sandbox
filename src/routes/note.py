@@ -1,7 +1,7 @@
 import json
-from typing import Optional
+from typing import Optional, List
 
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Header, Response
 from playhouse.shortcuts import model_to_dict
 from starlette import status
 
@@ -26,19 +26,29 @@ router = APIRouter(prefix="/note", tags=["Note"])
 )
 @open_connection
 async def get_note(
-    response: Response,
     note_id: int = notations["note_id"],
     query_note_id=notations["q_note_id"],
+    custom_header: Optional[List[str]] = Header(None),
 ):
     # No validation required as FastAPI already done this job :)
     # if not note_id or type(note_id) is not int:
     #     return {"error": "Invalid `note_id` parameter"}
     note = Note.get_or_none(id=note_id)
     if not note:
-        response.status_code = status.HTTP_404_NOT_FOUND
-        return {"error": "Not found"}
+        return Response(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content=json.dumps({"error": "Not found"}),
+            media_type="application/json",
+        )
     m2d = model_to_dict(note, recurse=False)
-    return Response(content=json.dumps(m2d, cls=DateTimeEncoder), media_type="application/json")
+    response_headers = {
+        "request-headers": str(custom_header),
+    }
+    return Response(
+        headers=response_headers,
+        content=json.dumps(m2d, cls=DateTimeEncoder),
+        media_type="application/json",
+    )
 
 
 @router.get("/", response_description="List of notes")
