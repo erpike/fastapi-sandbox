@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 
 from fastapi import APIRouter, Response
@@ -10,7 +11,7 @@ from src.type_models import (
     NoteCreate as TypeNoteCreate,
     NoteUpdate as TypeNoteUpdate,
 )
-from src.utils import open_connection
+from src.utils import open_connection, DateTimeEncoder
 from src.vars import notations
 
 
@@ -36,7 +37,8 @@ async def get_note(
     if not note:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"error": "Not found"}
-    return {"note": note and model_to_dict(note, recurse=False)}
+    m2d = model_to_dict(note, recurse=False)
+    return Response(content=json.dumps(m2d, cls=DateTimeEncoder), media_type="application/json")
 
 
 @router.get("/", response_description="List of notes")
@@ -55,7 +57,7 @@ async def list_note(
     query = query.where(Note.user_id == user_id) if user_id else query
     query = query.limit(limit) if limit else query
     query = query.offset(offset) if offset else query
-    return {"notes": list(query)}
+    return Response(content=json.dumps(list(query.dicts()), cls=DateTimeEncoder), media_type="application/json")
 
 
 @router.post("/")
@@ -65,13 +67,13 @@ async def create_note(item: TypeNoteCreate):
         text=item.text,
         user=item.user_id or None,
     )
-    return {"result": result}
+    return Response(content=json.dumps({"created": result.id}), media_type="application/json")
 
 
 @router.put("/{note_id}")
 @open_connection
 async def update_note(*, note_id: int = notations["note_id"], item: TypeNoteUpdate):
-    if not item.text or not item.user_id:
+    if not item.text and not item.user_id:
         raise BadRequestException("Either `text` or `user_id` parameter is empty.")
 
     params = {}
@@ -80,11 +82,11 @@ async def update_note(*, note_id: int = notations["note_id"], item: TypeNoteUpda
     if item.user_id:
         params["user_id"] = item.user_id
     result = Note.update(**params).where(Note.id == note_id).execute()
-    return {"result": result}
+    return Response(content=json.dumps({"updated": result}), media_type="application/json")
 
 
-@router.delete("/")
+@router.delete("/{note_id}")
 @open_connection
-async def delete_note(note_id: int = notations["limit"]):
+async def delete_note(note_id: int = notations["note_id"]):
     result = Note.delete().where(Note.id == note_id).execute()
-    return {"result": result}
+    return Response(content=json.dumps({"deleted": result}), media_type="application/json")

@@ -1,11 +1,21 @@
+import datetime
 import hashlib
 
 from functools import wraps
+from json import JSONEncoder
+
 from peewee import IntegrityError
 
 from src.config import secret_key
 from src.exceptions import DBException
 from src.models import db
+
+
+class DateTimeEncoder(JSONEncoder):
+    # Override the default method
+    def default(self, obj):
+        if isinstance(obj, (datetime.date, datetime.datetime)):
+            return obj.isoformat()
 
 
 def open_connection(coro):

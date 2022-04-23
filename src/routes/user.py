@@ -1,10 +1,11 @@
-from typing import Optional
+import json
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
+from typing import Optional
 
 from src.exceptions import BadRequestException
 from src.models import User
-from src.utils import open_connection, get_password_hash
+from src.utils import open_connection, get_password_hash, DateTimeEncoder
 from src.type_models import (
     UserCreate as TypeUserCreate,
     UserUpdate as TypeUserUpdate,
@@ -29,7 +30,7 @@ async def list_user(
     query = User.select(User.id, User.username, User.created_at).dicts()
     query = query.limit(limit) if limit else query
     query = query.offset(offset) if offset else query
-    return {"users": list(query)}
+    return Response(content=json.dumps(list(query.dicts()), cls=DateTimeEncoder), media_type="application/json")
 
 
 @router.post("/")
@@ -39,7 +40,7 @@ async def create_user(item: TypeUserCreate):
         username=item.username,
         password=get_password_hash(item.password)
     )
-    return {"result": result}
+    return Response(content=json.dumps({"created": result.id}), media_type="application/json")
 
 
 @router.put("/{user_id}")
@@ -54,11 +55,11 @@ async def update_user(*, user_id: int = notations["p_user_id"], item: TypeUserUp
     if item.username:
         params["username"] = item.username
     result = User.update(**params).where(User.id == user_id).execute()
-    return {"result": result}
+    return Response(content=json.dumps({"updated": result}), media_type="application/json")
 
 
 @router.delete("/{user_id}")
 @open_connection
 async def delete_user(user_id: int = notations["p_user_id"]):
     result = User.delete().where(User.id == user_id).execute()
-    return {"result": result}
+    return Response(content=json.dumps({"deleted": result}), media_type="application/json")
