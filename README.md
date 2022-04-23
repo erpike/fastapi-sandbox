@@ -3,13 +3,15 @@
 #### Quickstart:
 
 1. bash run: (port=80)
-   - `bash run.sh -s your_secret_key`
+   - `bash run.sh -s your_secret_key -u username -p password`
      - builds docker image
      - starts docker container
      - shows log
 
 2. python run: (port=8000)
-   - `uvicorn main:app`
+   - create .env file and set `USER_NAME` & `USER_PASSWORD` variables
+   - run `uvicorn main:app`
+     - flag: `--env-file PATH` Environment configuration file.
      - flag: `--reload` (restart server on code update)
 
 - available addresses:

@@ -1,10 +1,11 @@
 import json
 from typing import Optional, List
 
-from fastapi import APIRouter, Header, Response
+from fastapi import APIRouter, Header, Response, Depends
 from playhouse.shortcuts import model_to_dict
 from starlette import status
 
+from src.auth.oauth2 import oauth2_schema
 from src.exceptions import BadRequestException
 from src.models import Note
 from src.type_models import (
@@ -29,6 +30,7 @@ async def get_note(
     note_id: int = notations["note_id"],
     query_note_id=notations["q_note_id"],
     custom_header: Optional[List[str]] = Header(None),
+    token: str = Depends(oauth2_schema),
 ):
     # No validation required as FastAPI already done this job :)
     # if not note_id or type(note_id) is not int:

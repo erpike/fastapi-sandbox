@@ -10,7 +10,6 @@ RUN pip install --no-cache-dir --upgrade -r /requirements.txt
 COPY ./src /app/src
 COPY ./main.py /app/main.py
 
-ENV SECRET_KEY=
 # VOLUME ./demo.db /demo.db  TODO: define why not work?
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
