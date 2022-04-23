@@ -31,3 +31,12 @@ Key `FastAPI` features:
 - dependency injection
   - Objects don't create each other, but provide a way to inject the needed dependencies instead.
 - testing
+
+
+### Showcase
+
+live example can see here: https://65r7ue.deta.dev/docs 
+
+auth credentials:
+ - user: admin
+ - password: admin 

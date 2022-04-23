@@ -25,8 +25,7 @@ async def list_user(
     user: User = Depends(identify_user),
 ):
     """
-    :return: all notes related to user (by id).\n
-    If id is not set, returns all existed notes.\n
+    :return: list of existed users.\n
     `limit` and `offset` - standard SQL query parameters.
     """
     query = User.select(User.id, User.username, User.created_at).dicts()
