@@ -2,7 +2,7 @@ import hashlib
 from functools import wraps
 from peewee import IntegrityError
 
-from src.conf import SECRET_KEY
+from src.config import secret_key
 from src.models import db
 
 
@@ -19,4 +19,4 @@ def open_connection(coro):
 
 # TODO: fix import error. Can't run python src/utils.py from root.
 def get_password_hash(password: str):
-    return hashlib.sha256(f"{SECRET_KEY}{password}".encode("utf8")).hexdigest()
+    return hashlib.sha256(f"{secret_key}{password}".encode("utf8")).hexdigest()

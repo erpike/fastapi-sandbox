@@ -35,3 +35,10 @@ async def update_user(*, user_id: int = notations["p_user_id"], item: TypeUserUp
         params["username"] = item.username
     result = User.update(**params).where(User.id == user_id).execute()
     return {"result": result}
+
+
+@router.delete("/{user_id}")
+@open_connection
+async def delete_user(user_id: int = notations["p_user_id"]):
+    result = User.delete().where(User.id == user_id).execute()
+    return {"result": result}

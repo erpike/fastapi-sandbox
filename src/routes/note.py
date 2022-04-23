@@ -23,7 +23,11 @@ router = APIRouter(prefix="/note", tags=["Note"])
     description="Get note by id.<br>`id` param value should be more that 0."
 )
 @open_connection
-async def get_note(response: Response, note_id: int = notations["note_id"]):
+async def get_note(
+    response: Response,
+    note_id: int = notations["note_id"],
+    query_note_id=notations["q_note_id"],
+):
     # No validation required as FastAPI already done this job :)
     # if not note_id or type(note_id) is not int:
     #     return {"error": "Invalid `note_id` parameter"}

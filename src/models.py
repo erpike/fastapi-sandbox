@@ -1,7 +1,7 @@
 from datetime import datetime
 from peewee_migrate import Router
 
-from src.conf import DB_FILENAME, MIGRATIONS_DIR
+from src.config import DB_FILENAME, MIGRATIONS_DIR
 from peewee import (
     CharField,
     DateTimeField,

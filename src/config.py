@@ -9,4 +9,9 @@ sys.path.append(SRC_DIR)
 DB_FILENAME = os.path.join(ROOT_DIR, "demo.db")
 MIGRATIONS_DIR = os.path.join(SRC_DIR, "migrations")
 
-SECRET_KEY = "salt:TODO:should::be:outside:project"  # TODO remove from rep
+
+def set_config_variable(name, default):
+    return os.environ.get(name) or default
+
+
+secret_key = set_config_variable("SECRET_KEY", "AWESOME_SECRET_KEY")
