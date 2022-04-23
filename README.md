@@ -33,9 +33,10 @@ Key `FastAPI` features:
 - testing
 
 
-### Showcase
+### Showcase:
 
-live example can see here: https://65r7ue.deta.dev/docs 
+live example can see here: https://65r7ue.deta.dev/docs \
+Deta supports readonly .sqlite db (POST, PUT, DELETE operations will not work)
 
 auth credentials:
  - user: admin
