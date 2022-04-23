@@ -6,6 +6,11 @@ notations = {
         description="`id` parameter for targeting note.",
         gt=0,
     ),
+    'q_note_id': Path(
+        default=None,
+        description="`id` parameter for targeting note.",
+        deprecated=True,
+    ),
     'limit': Query(
         None,
         description="SQL query `limit` param.",
