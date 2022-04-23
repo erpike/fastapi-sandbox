@@ -4,6 +4,7 @@ from fastapi import APIRouter, Response
 from playhouse.shortcuts import model_to_dict
 from starlette import status
 
+from src.exceptions import BadRequestException
 from src.models import Note
 from src.type_models import (
     NoteCreate as TypeNoteCreate,
@@ -71,7 +72,7 @@ async def create_note(item: TypeNoteCreate):
 @open_connection
 async def update_note(*, note_id: int = notations["note_id"], item: TypeNoteUpdate):
     if not item.text or not item.user_id:
-        return {"error": "Invalid request parameters."}
+        raise BadRequestException("Either `text` or `user_id` parameter is empty.")
 
     params = {}
     if item.text:

@@ -1,8 +1,10 @@
 import hashlib
+
 from functools import wraps
 from peewee import IntegrityError
 
 from src.config import secret_key
+from src.exceptions import DBException
 from src.models import db
 
 
@@ -12,8 +14,8 @@ def open_connection(coro):
         try:
             with db:
                 return await coro(*args, **kwargs)
-        except IntegrityError:
-            return {"error": "IntegrityError during query."}
+        except IntegrityError as e:
+            raise DBException(f"DB ERROR: {e}")
     return wrapper
 
 
