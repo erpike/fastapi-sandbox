@@ -10,6 +10,8 @@ do
 done
 
 sudo docker build -t erp-fastapi .
+sudo docker stop erp-fastapi-dev
+sudo docker rm erp-fastapi-dev
 sudo docker run -d \
   --name erp-fastapi-dev \
   --env SECRET_KEY=$secret_key \

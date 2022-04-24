@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y vim
 
-COPY ./requirements.txt /requirements.txt
+COPY ./requirements/production.txt /requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /requirements.txt
 
 COPY ./src /app/src
