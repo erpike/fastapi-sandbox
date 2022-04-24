@@ -12,6 +12,7 @@ from peewee import (
     DateTimeField,
     ForeignKeyField,
     Model,
+    Proxy,
     SqliteDatabase,
     TextField,
 )
@@ -22,11 +23,12 @@ db = SqliteDatabase(
     autoconnect=False,
     pragmas={"foreign_keys": 1}
 )
+db_proxy = Proxy()
 
 
 class BaseModel(Model):
     class Meta:
-        database = db
+        database = db_proxy
 
     created_at = DateTimeField(default=datetime.utcnow)
 
@@ -53,12 +55,16 @@ def create_superuser():
             username=superuser_name,
             password=get_password_hash(superuser_password),
         )
-    except Exception: # noqa
+    except Exception:  # noqa
         raise Exception("Can't create superuser.")
 
 
 def init_db():
+    db_proxy.initialize(db)
     router = Router(db, migrate_dir=MIGRATIONS_DIR)
-    with db:
+    with db_proxy:
         router.run()
         create_superuser()
+
+
+MODELS = [User, Note]

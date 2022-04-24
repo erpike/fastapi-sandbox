@@ -8,7 +8,7 @@ from peewee import IntegrityError
 
 from src.config import secret_key
 from src.exceptions import DBException
-from src.models import db
+from src.models import db, db_proxy
 
 
 class DateTimeEncoder(JSONEncoder):
@@ -22,7 +22,7 @@ def open_connection(coro):
     @wraps(coro)
     async def wrapper(*args, **kwargs):
         try:
-            with db:
+            with db_proxy:
                 return await coro(*args, **kwargs)
         except IntegrityError as e:
             raise DBException(f"DB ERROR: {e}")

@@ -8,8 +8,7 @@ from typing import Optional
 from starlette import status
 
 from src.config import ACCESS_TOKEN_EXPIRE_MINUTES, secret_key, ENCODE_ALGORITHM
-from src.models import db, User
-
+from src.models import db, User, db_proxy
 
 oauth2_schema = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
@@ -34,7 +33,7 @@ def identify_user(token: str = Depends(oauth2_schema)):
         username = payload.get("sub")
         if not username:
             raise credentials_exception
-        with db:
+        with db_proxy:
             user = User.get_or_none(username=username)
             if not user:
                 raise credentials_exception
