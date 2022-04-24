@@ -47,7 +47,8 @@ def create_superuser():
     if not (superuser_name and superuser_password):
         raise Exception(
             "Insufficient credentials for superuser. "
-            "Please, provide environment variables `USER_NAME` and `USER_PASSWORD`"
+            "Please, provide environment variables `USER_NAME` and `USER_PASSWORD` by creating .env file inside "
+            "project root. Or, if you start project from bash script, provide -u and -p flags."
         )
     try:
         from src.utils import get_password_hash
