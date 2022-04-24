@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 from typing import Optional
 
 
@@ -13,8 +13,8 @@ class NoteUpdate(BaseModel):
 
 
 class UserCreate(BaseModel):
-    username: str
-    password: str
+    username: constr(min_length=2)
+    password: constr(min_length=5)
 
 
 class UserUpdate(BaseModel):
